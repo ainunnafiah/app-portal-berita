@@ -31,7 +31,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "https://app-portal-berita-fe.vercel.app"],
+    origin: ["https://app-portal-berita-fe.vercel.app"],
     methods:["GET, POST, PUT, DELETE"],
     credentials:true
   })
