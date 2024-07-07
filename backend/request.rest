@@ -1,0 +1,142 @@
+//Login Admin
+POST https://app-portal-berita-be.vercel.app/login
+Content-Type: application/json
+
+{
+  "email": "author@gmail.com",
+  "password": "author123"
+}
+
+### Verifikasi Author Oleh admin
+POST https://app-portal-berita-be.vercel.app/validate-author
+Content-Type: application/json
+
+{
+  "user_id" : "3"
+}
+
+### Admin Menambahkan Kategori Berita ###
+POST https://app-portal-berita-be.vercel.app/categories
+Content-Type: application/json
+
+{
+  "categories_name" : "Hiburan"
+}
+
+### Verifikasi berita Oleh Admin ###
+POST https://app-portal-berita-be.vercel.app/news/verify
+Content-Type: application/json
+
+{
+  "news_id":"1"
+}
+
+###//////####
+
+
+GET https://app-portal-berita-be.vercel.app/me
+
+###
+POST https://app-portal-berita-be.vercel.app/register
+Content-Type: application/json
+
+{
+  "username": "Author",
+  "email": "author@gmail.com",
+  "password": "author123",
+  "confPassword": "author123",
+  "role":"author"
+}
+
+
+### //Login Author// ####
+POST https://app-portal-berita-be.vercel.app/login
+Content-Type: application/json
+
+{
+  "email": "author@gmail.com",
+  "password": "author123"
+}
+
+//Author Menambahkan Berita
+###
+GET https://app-portal-berita-be.vercel.app/News/user
+Content-Type: application/json
+
+{
+  "title": "Timnas Indonesia Kalah Menghadapi Iraq",
+  "content": "Timnas Indonesia Harus Mengakui Kekalahan dari Iraq dalam lanjutan Babak penyisihan Piala Dunia",
+  "categories_id":"1",
+  "image_url":"https://www.google.com/imgres?q=timnas&imgurl=https%3A%2F%2Fimgcdn.solopos.com%2F%40space%2F2024%2F05%2Ftimnas-indonesia.jpg&imgrefurl=https%3A%2F%2Fsport.solopos.com%2Fada-12-laga-timnas-indonesia-di-bulan-juni-2024-ini-jadwal-lengkapnya-1934518&docid=tEsadcmVrQbLrM&tbnid=VETWgmawcfiUjM&vet=12ahUKEwjsl725sceGAxXRcWwGHSd1EDgQM3oECFwQAA..i&w=600&h=450&hcb=2&itg=1&ved=2ahUKEwjsl725sceGAxXRcWwGHSd1EDgQM3oECFwQAA"
+}
+
+
+
+### Register User ###
+POST https://app-portal-berita-be.vercel.app/register
+Content-Type: application/json
+
+{
+  "username": "User",
+  "email": "user@gmail.com",
+  "password": "user123",
+  "confPassword": "user123",
+  "role":"user"
+}
+
+
+### Login User
+POST https://app-portal-berita-be.vercel.app/login
+Content-Type: application/json
+
+{
+  "email" : "user@gmail.com",
+  "password" : "user123"
+}
+
+### User Mendapatkan Notifikasi ###
+GET https://app-portal-berita-be.vercel.app/notifications
+
+### User Membaca Notifikasi ###
+PATCH https://app-portal-berita-be.vercel.app/notifications/1/read
+
+###
+DELETE https://app-portal-berita-be.vercel.app/logout
+
+
+###user mengirim comments
+POST https://app-portal-berita-be.vercel.app/comments
+Content-Type: application/json
+
+{
+
+"news_id" : "38",
+"comment_text" : "saya mau comment"
+
+}
+
+##user mengedit comments
+PATCH https://app-portal-berita-be.vercel.app/comments
+Content-Type: application/json
+{
+"comment_id":"2",
+"comments_text":"saya mau comment updated"
+}
+
+##user delete comments
+PATCH https://app-portal-berita-be.vercel.app/comments
+Content-Type: application/json
+{
+"comment_id":"2"
+}
+
+//admin melihat semua comments
+##
+GET https://app-portal-berita-be.vercel.app/comments
+Content-Type: application/json
+
+##admin delete comments
+PATCH https://app-portal-berita-be.vercel.app/comments/2
+Content-Type: application/json
+
+

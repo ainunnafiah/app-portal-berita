@@ -1,0 +1,12 @@
+/* Navbar */
+.navbar {
+  background-color: #085487; 
+}
+
+.bi-person-circle{
+  color: white;
+}
+
+.search-bar .form-control{
+  width: 400px;
+}
