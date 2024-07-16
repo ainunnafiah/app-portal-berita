@@ -80,7 +80,6 @@ export default {
             try {
                 const response = await axios.get('/news');
                 this.newsList = response.data;
-                this.newsList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             } catch (error) {
                 console.error('Failed to fetch news:', error);
             }

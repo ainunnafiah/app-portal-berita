@@ -31,10 +31,9 @@ export const verifyToken = async (req, res, next) => {
         next();         // Allow guest access
     }
 };
-
 // Middleware untuk memeriksa peran admin
 export const isAdmin = (req, res, next) => {
-    if (!req.user || req.user.role !== 'admin') {
+    if (req.user.role !== 'admin') {
         return res.status(403).json({ msg: 'Akses terlarang, hanya admin yang bisa mengakses.' });
     }
     next();
@@ -42,7 +41,7 @@ export const isAdmin = (req, res, next) => {
 
 // Middleware untuk memeriksa peran author
 export const isAuthor = (req, res, next) => {
-    if (!req.user || req.user.role !== 'author') {
+    if (req.user.role !== 'author') {
         return res.status(403).json({ msg: 'Akses terlarang, hanya author yang bisa mengakses.' });
     }
     next();
@@ -50,7 +49,7 @@ export const isAuthor = (req, res, next) => {
 
 // Middleware untuk memeriksa peran user
 export const isUser = (req, res, next) => {
-    if (!req.user || req.user.role !== 'user') {
+    if (req.user.role !== 'user') {
         return res.status(403).json({ msg: 'Akses terlarang, hanya user yang bisa mengakses.' });
     }
     next();

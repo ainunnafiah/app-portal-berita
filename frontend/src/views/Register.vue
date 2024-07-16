@@ -102,7 +102,7 @@ export default {
       }
 
       try {
-        const response = await axios.post("https://app-portal-berita-be.vercel.app/Register", {
+        const response = await axios.post("https://api-msib-6-portal-berita-01.educalab.id/Register", {
           username: this.username,
           email: this.email,
           password: this.password,
@@ -146,7 +146,7 @@ export default {
       this.$router.push({ name: "Login" });
     },
     loginWithGoogle() {
-      window.location.href = "https://app-portal-berita-be.vercel.app/auth/google";
+      window.location.href = "http://localhost:5000/auth/google/callback";
     },
   },
 };

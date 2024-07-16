@@ -52,7 +52,7 @@ export default {
     async sendResetEmail() {
       try {
         const response = await axios.post(
-          "https://app-portal-berita-be.vercel.app/forget-password",
+          "http://localhost:5000/forget-password",
           { email: this.email }
         );
 

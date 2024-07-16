@@ -1,25 +1,37 @@
 import axios from "axios";
 
-// Membuat instance axios dengan base URL
 const instance = axios.create({
-  baseURL: 'https://app-portal-berita-be.vercel.app/',
+  baseURL:  'https://api-msib-6-portal-berita-01.educalab.id/',
 });
 
 // Fungsi untuk menghapus token dari localStorage
-const handleRemoveToken = async () => {
+const handleRemoveToken = () => {
   try {
-    await localStorage.removeItem('token');
+    localStorage.removeItem('token');
   } catch (error) {
-    throw error;
+    console.error('Error removing token:', error);
   }
 };
 
-// Menambahkan interceptor request
+const handleLogin = async (email, password) => {
+  try {
+    const response = await axios.post('/login', { email, password });
+    if (response.data.success) {
+      localStorage.setItem('token', response.data.token);
+      // Lanjutkan dengan alur login, seperti mengarahkan ke halaman dashboard
+    } else {
+      console.error(response.data.msg);
+    }
+  } catch (error) {
+    console.error('Login failed:', error);
+  }
+};
+// Interceptor untuk menambahkan token ke setiap permintaan jika tersedia
 instance.interceptors.request.use(
-  async (config) => {
-    const token = await localStorage.getItem('token');
+  (config) => {
+    const token = localStorage.getItem('token');
     if (token && config.headers) {
-      config.headers.Authorization = "Bearer " + token;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -28,13 +40,13 @@ instance.interceptors.request.use(
   }
 );
 
-// Menambahkan interceptor response
+// Interceptor untuk menangani respons
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       handleRemoveToken();
-      console.error(error.response);
+      console.error('Unauthorized, token removed:', error.response.data);
     }
     return Promise.reject(error);
   }

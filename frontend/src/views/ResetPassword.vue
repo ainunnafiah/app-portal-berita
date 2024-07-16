@@ -54,7 +54,7 @@ export default {
       const resetToken = this.$route.query.token; // Ambil token dari query params
       try {
         const response = await axios.post(
-          "https://app-portal-berita-be.vercel.app/reset-password",
+          "http://localhost:5000/reset-password",
           {
             resetToken,
             newPassword: this.newPassword,

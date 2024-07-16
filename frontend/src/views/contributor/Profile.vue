@@ -75,7 +75,7 @@ export default {
     },
     async logout() {
       try {
-        await axios.delete("https://app-portal-berita-be.vercel.app/Logout");
+        await axios.delete("http://localhost:5000/Logout");
         localStorage.removeItem("userRole");
         this.isLoggedIn = false;
         this.$router.push({ name: "Login" });

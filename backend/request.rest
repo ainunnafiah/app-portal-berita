@@ -1,14 +1,14 @@
 //Login Admin
-POST https://app-portal-berita-be.vercel.app/login
+POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-  "email": "author@gmail.com",
-  "password": "author123"
+  "email": "admin@gmail.com",
+  "password": "Admin123"
 }
 
 ### Verifikasi Author Oleh admin
-POST https://app-portal-berita-be.vercel.app/validate-author
+POST http://localhost:5000/validate-author
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ### Admin Menambahkan Kategori Berita ###
-POST https://app-portal-berita-be.vercel.app/categories
+POST http://localhost:5000/categories
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Verifikasi berita Oleh Admin ###
-POST https://app-portal-berita-be.vercel.app/news/verify
+POST http://localhost:5000/news/verify
 Content-Type: application/json
 
 {
@@ -34,23 +34,32 @@ Content-Type: application/json
 ###//////####
 
 
-GET https://app-portal-berita-be.vercel.app/me
+GET http://localhost:5000/me
 
 ###
-POST https://app-portal-berita-be.vercel.app/register
+POST https://api-msib-6-portal-berita-01.educalab.id/register
 Content-Type: application/json
 
 {
-  "username": "Author",
-  "email": "author@gmail.com",
-  "password": "author123",
-  "confPassword": "author123",
-  "role":"author"
+  "username": "User35",
+  "email": "user35@gmail.com",
+  "password": "user35",
+  "confPassword": "user35",
+  "role":"user"
 }
 
+###
+GET https://api-msib-6-portal-berita-01.educalab.id
+###
+POST https://api-msib-6-portal-berita-01.educalab.id/api/auth/login
+Content-Type: application/json
 
+{
+  "email": "user35@gmail.com",
+  "password": "user35"
+}
 ### //Login Author// ####
-POST https://app-portal-berita-be.vercel.app/login
+POST http://localhost:5000/login
 Content-Type: application/json
 
 {
@@ -60,7 +69,7 @@ Content-Type: application/json
 
 //Author Menambahkan Berita
 ###
-GET https://app-portal-berita-be.vercel.app/News/user
+POST http://localhost:5000/News
 Content-Type: application/json
 
 {
@@ -73,7 +82,7 @@ Content-Type: application/json
 
 
 ### Register User ###
-POST https://app-portal-berita-be.vercel.app/register
+POST http://localhost:5000/register
 Content-Type: application/json
 
 {
@@ -86,7 +95,7 @@ Content-Type: application/json
 
 
 ### Login User
-POST https://app-portal-berita-be.vercel.app/login
+POST http://localhost:5000/login
 Content-Type: application/json
 
 {
@@ -95,17 +104,17 @@ Content-Type: application/json
 }
 
 ### User Mendapatkan Notifikasi ###
-GET https://app-portal-berita-be.vercel.app/notifications
+GET http://localhost:5000/notifications
 
 ### User Membaca Notifikasi ###
-PATCH https://app-portal-berita-be.vercel.app/notifications/1/read
+PATCH http://localhost:5000/notifications/1/read
 
 ###
-DELETE https://app-portal-berita-be.vercel.app/logout
+DELETE http://localhost:5000/logout
 
 
 ###user mengirim comments
-POST https://app-portal-berita-be.vercel.app/comments
+POST http://localhost:5000/comments
 Content-Type: application/json
 
 {
@@ -116,7 +125,7 @@ Content-Type: application/json
 }
 
 ##user mengedit comments
-PATCH https://app-portal-berita-be.vercel.app/comments
+PATCH http://localhost:5000/comments
 Content-Type: application/json
 {
 "comment_id":"2",
@@ -124,19 +133,18 @@ Content-Type: application/json
 }
 
 ##user delete comments
-PATCH https://app-portal-berita-be.vercel.app/comments
+PATCH http://localhost:5000/comments
 Content-Type: application/json
 {
 "comment_id":"2"
 }
 
-//admin melihat semua comments
-##
-GET https://app-portal-berita-be.vercel.app/comments
+##admin melihat semua comments
+GET http://localhost:5000/comments
 Content-Type: application/json
 
 ##admin delete comments
-PATCH https://app-portal-berita-be.vercel.app/comments/2
+PATCH http://localhost:5000/comments/2
 Content-Type: application/json
 
 

@@ -92,7 +92,7 @@ export default {
   methods: {
     async fetchNews() {
       try {
-        const response = await axios.get(`https://app-portal-berita-be.vercel.app/news/${this.$route.params.id}`);
+        const response = await axios.get(`https://api-msib-6-portal-berita-01.educalab.id/news/${this.$route.params.id}`);
         const data = response.data;
         this.title = data.title;
         this.content = data.content;
@@ -106,7 +106,7 @@ export default {
     async fetchComments() {
       try {
         const response = await axios.get(
-          `https://app-portal-berita-be.vercel.app/comments/${this.$route.params.id}`
+          `https://api-msib-6-portal-berita-01.educalab.id/comments/${this.$route.params.id}`
         );
         this.comments = response.data;
       } catch (error) {
@@ -121,7 +121,7 @@ export default {
         }
 
         const response = await axios.post(
-          "https://app-portal-berita-be.vercel.app/comments",
+          "https://api-msib-6-portal-berita-01.educalab.id/comments",
           {
             news_id: this.$route.params.id,
             comment_text: this.newComment,

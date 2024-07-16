@@ -11,7 +11,7 @@ const router = express.Router();
 
 const CLIENT_ID = 'YOUR_CLIENT_ID';
 const CLIENT_SECRET = 'YOUR_CLIENT_SECRET';
-const REDIRECT_URI = 'https://app-portal-berita-be.vercel.app/auth/google/callback';
+const REDIRECT_URI = 'http://localhost:5000/auth/google/callback';
 
 // Initiates the Google Login flow
 router.get('/auth/google', (req, res) => {
@@ -75,7 +75,7 @@ router.get('/auth/google/callback', async (req, res) => {
 
       console.log("Access token generated:", accessToken);
 
-      res.redirect(`https://app-portal-berita-be.vercel.app/auth-success?token=${accessToken}`);
+      res.redirect(`http://localhost:5000/auth-success?token=${accessToken}`);
       // res.status(200).json({ msg: "Login successful" });
 
     } else {
