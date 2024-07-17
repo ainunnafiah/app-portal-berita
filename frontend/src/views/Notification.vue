@@ -25,7 +25,7 @@ export default {
     async fetchNotifications() {
       try {
         const response = await axios.get('/notifications');
-        this.notifications = response.data;
+        this.notifications = response.data.reverse();
       } catch (error) {
         console.error(error);
       }

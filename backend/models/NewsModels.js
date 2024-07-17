@@ -17,7 +17,7 @@ const News = db.define(
       },
     },
     title: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(355),
       allowNull: false,
       validate: {
         notEmpty: true,

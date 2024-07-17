@@ -9,8 +9,10 @@
         </div>
         <div class="saved-news-text">
           <div class="row">
-            <p class="saved-news">{{ savedItem.news.title }}</p>
-            <p class="time-news">{{ formatDate(savedItem.savedAt) }}</p>
+            <div class="saved-news hover-pointer">
+              <h2 @click="handleSavedNewsClick(savedItem.news.news_id)">{{ savedItem.news.title }}</h2>
+              <p class="time-news">{{ formatDate(savedItem.saved_at) }}</p>
+            </div>
             <div class="button-more">
               <button class="more-button" @click="toggleDropdown(savedItem.saved_id)">
                 <i class="bi bi-three-dots button-icon"></i>
@@ -45,7 +47,7 @@ export default {
     async fetchSavedNews() {
       try {
         const response = await axios.get('saved-news');
-        this.savedNews = response.data;
+        this.savedNews = response.data.reverse();
       } catch (error) {
         console.error('Error fetching saved news:', error);
       }
@@ -67,6 +69,9 @@ export default {
       }
       this.dropdownOpen = null;
     },
+    handleSavedNewsClick(newsId) {
+      this.$router.push({ path: `/news/${newsId}` });
+    },
     handleClickOutside(event) {
       if (!this.$el.contains(event.target)) {
         this.dropdownOpen = null;
@@ -84,6 +89,11 @@ export default {
 </script>
 
 <style scoped>
+.saved-news:hover {
+  transform: scale(1.05); /* Efek scaling saat dihover */
+  cursor: pointer; /* Ubah kursor saat dihover menjadi pointer */
+  color: #074a77;
+}
 .saved-news-container {
   padding-left: 10%;
   padding-right: 10%;
@@ -129,7 +139,10 @@ export default {
 }
 
 .saved-news {
-  font-weight: 700;
+  font-weight: 100;
+  transition: transform 0.3s ease; 
+}
+.saved-news h2{
   font-size: 20px;
 }
 

@@ -33,7 +33,6 @@ app.use(
     credentials: true,
     origin: ["http://localhost:5173", "http://fe-msib-6-portal-berita-01.educalab.id"]
   })
-
 );
 
 app.use(bodyParser.json());
@@ -47,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(UserRoute);
-// app.use(NewsRoute);
+app.use(NewsRoute);
 app.use("/api/Auth", AuthRoute);
 app.use("/api", NewsRoute);
 app.use("/api", NotificationRoute);
@@ -56,12 +55,12 @@ app.use("/api", CommentRoute);
 app.use("/api", ContactMessageRoute);
 app.use("/api", CategoryRoute);
 app.use("/api", SavedNewsRoute);
-// app.use(CategoryRoute);
-// app.use(CommentRoute);
-// app.use(NotificationRoute);
-// app.use(SavedNewsRoute);
-// app.use(ContactMessageRoute);
-// app.use(AuthRoute);
+app.use(CategoryRoute);
+app.use(CommentRoute);
+app.use(NotificationRoute);
+app.use(SavedNewsRoute);
+app.use(ContactMessageRoute);
+app.use(AuthRoute);
 
 const PORT = process.env.PORT || 5000;
 

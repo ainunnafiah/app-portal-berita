@@ -94,4 +94,5 @@ export default {
 .card-body {
     padding: 40px;
 }
+
 </style>

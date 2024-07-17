@@ -105,14 +105,18 @@ export const Login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ success: false, msg: "Email dan Password harus diisi" });
+    return res
+      .status(400)
+      .json({ success: false, msg: "Email dan Password harus diisi" });
   }
 
   try {
     const user = await Users.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).json({ success: false, msg: "User tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ success: false, msg: "User tidak ditemukan" });
     }
 
     const match = await argon2.verify(user.password, password);
@@ -122,7 +126,9 @@ export const Login = async (req, res) => {
     }
 
     if (user.role === "author" && user.status !== "active") {
-      return res.status(403).json({ success: false, msg: "Akun belum divalidasi oleh admin" });
+      return res
+        .status(403)
+        .json({ success: false, msg: "Akun belum divalidasi oleh admin" });
     }
 
     const user_id = user.user_id;
@@ -133,7 +139,9 @@ export const Login = async (req, res) => {
     const accessToken = jwt.sign(
       { user_id, username, userEmail, role },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
+      {
+        expiresIn: "1h",
+      }
     );
 
     res.cookie("accessToken", accessToken, {
@@ -141,11 +149,14 @@ export const Login = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    // Tambahkan token ke respons untuk disimpan di localStorage di frontend
-    res.status(200).json({ success: true, msg: "Login berhasil", token: accessToken, role: role });
+    res
+      .status(200)
+      .json({ success: true, msg: "Login berhasil", token: accessToken, role: role});
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, msg: "Terjadi kesalahan pada server" });
+    res
+      .status(500)
+      .json({ success: false, msg: "Terjadi kesalahan pada server" });
   }
 };
 

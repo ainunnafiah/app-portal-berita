@@ -10,7 +10,7 @@
     <img :src="imageUrl" class="image-news" alt="News Image" />
     <h1 class="title-news">{{ title }}</h1>
     <div class="content">
-      <p>{{ content }}</p>
+      <p v-for="(paragraph, index) in content" :key="index">{{ paragraph }}</p>
     </div>
     <div class="button-container">
       <button class="circle-button" @click="showShareModal">
@@ -35,7 +35,7 @@
     <div v-for="comment in comments" :key="comment.comment_id" class="comments">
       <div>
         <img
-          src="https://via.placeholder.com/125"
+          src="https://images.rawpixel.com/image_png_social_square/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LTNkc29saWQtcG8tMDI5LnBuZw.png"
           class="profile-picture"
           alt="Profile Picture"
         />
@@ -43,7 +43,7 @@
       <div class="content-comment">
         <div class="title-time">
           <p class="username-comment">{{ comment.user.username }}</p>
-          <p class="time-comment">{{ formatDate(comment.createdAt) }}</p>
+          <p class="time-comment">&nbsp;&nbsp;&nbsp;{{(comment.createdAt) }}</p>
         </div>
         <p class="user-comment">{{ comment.comment_text }}</p>
       </div>
@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       title: '',
-      content: '',
+      content: [],
       author: '',
       imageUrl: '',
       date: '',
@@ -92,10 +92,10 @@ export default {
   methods: {
     async fetchNews() {
       try {
-        const response = await axios.get(`https://api-msib-6-portal-berita-01.educalab.id/news/${this.$route.params.id}`);
+        const response = await axios.get(`http://localhost:5000/news/${this.$route.params.id}`);
         const data = response.data;
         this.title = data.title;
-        this.content = data.content;
+        this.content = data.content.split('\n'); // Memisahkan konten menjadi array paragraf
         this.imageUrl = data.image_url;
         this.date = this.formatDate(data.createdAt);
         this.author = data.author.username;
@@ -103,44 +103,55 @@ export default {
         console.error('Error fetching news:', error);
       }
     },
-    async fetchComments() {
+      async fetchComments() {
       try {
-        const response = await axios.get(
-          `https://api-msib-6-portal-berita-01.educalab.id/comments/${this.$route.params.id}`
-        );
-        this.comments = response.data;
+        const response = await axios.get(`http://localhost:5000/comments/${this.$route.params.id}`);
+        this.comments = response.data.map(comment => ({
+          ...comment,
+          createdAt: moment.utc(comment.createdAt).local().format('dddd, D MMMM YYYY HH:mm [WIB]'),
+        }));
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
     },
     async sendComment() {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
-          throw new Error("Access token not found");
-        }
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      throw new Error("Access token not found");
+    }
 
-        const response = await axios.post(
-          "https://api-msib-6-portal-berita-01.educalab.id/comments",
-          {
-            news_id: this.$route.params.id,
-            comment_text: this.newComment,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        this.newComment = "";
-        this.fetchComments();
-      } catch (error) {
-        console.error("Error sending comment:", error);
+    const response = await axios.post(
+      "http://localhost:5000/comments",
+      {
+        news_id: this.$route.params.id,
+        comment_text: this.newComment,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       }
+    );
+    
+    const newComment = {
+      comment_id: response.data.comment.comment_id,
+      comment_text: this.newComment,
+      createdAt: response.data.comment.createdAt, // Pastikan server mengembalikan createdAt
+      user: {
+        username: "User", // Ganti dengan username pengguna yang sedang login
+      },
+    };
+    this.comments.push(newComment);
+    this.newComment = "";
+  } catch (error) {
+    console.error("Error sending comment:", error);
+  }
     },
     formatDate(dateString) {
-      return moment(dateString).format('dddd, D MMMM YYYY HH.mm [WIB]');
-    },
+  return moment.utc(dateString).local().format('dddd, D MMMM YYYY HH.mm [WIB]');
+},
+
     async saveToSavedNews() {
       try {
         const response = await axios.post('saved-news', {

@@ -1,7 +1,7 @@
 <template>
-  <AuthLayout>
-    <div class="content-wrapper">
-      <h6 class="d-flex justify-content-center mb-4">
+  <div class="register-container">
+    <div class="register-card">
+      <h6 class="text-center mb-4">
         Daftar ke Berita.com dan temukan berita terkini!
       </h6>
       <div v-if="message" :class="`alert ${messageType}`" role="alert">
@@ -15,7 +15,7 @@
           v-model="username"
         />
         <input
-          class="form-control my-2"
+          class="form-control mt-2"
           type="text"
           placeholder="Email"
           v-model="email"
@@ -32,20 +32,19 @@
           placeholder="Konfirmasi Kata Sandi"
           v-model="confPassword"
         />
-        <div class="font-size-small mt-1 my-3">
+        <div class="font-size-small mt-1 mb-2">
           Minimal 8 karakter dengan kombinasi huruf, angka, dan simbol
         </div>
-        <div class="form-group mt-3">
+        <div class="form-group">
           <label for="roleSelect">Role:</label>
           <select class="form-control mt-2" id="roleSelect" v-model="role">
             <option value="user">User</option>
             <option value="author">Author</option>
           </select>
         </div>
-
-        <button type="submit" class="btn btn-secondary mt-1">Daftar</button>
+        <button type="submit" class="btn btn-primary mt-4">Register</button>
       </form>
-      <h6 class="d-flex justify-content-center my-3">atau</h6>
+      <h6 class="text-center my-3">atau</h6>
       <div class="d-flex justify-content-center">
         <img
           src="../assets/icon/google.svg"
@@ -55,22 +54,18 @@
         />
       </div>
       <div class="d-flex justify-content-center mt-3">
-        <span class="me-2">Sudah memiliki akun?</span
-        ><span class="text-danger" type="button" @click="login">Login!</span>
+        <span class="me-2">Sudah memiliki akun?</span>
+        <span class="text-danger cursor-pointer" @click="login">Login!</span>
       </div>
     </div>
-  </AuthLayout>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-import AuthLayout from "../components/Auth/AuthLayout.vue";
 
 export default {
   name: "Register",
-  components: {
-    AuthLayout,
-  },
   data() {
     return {
       username: "",
@@ -102,7 +97,7 @@ export default {
       }
 
       try {
-        const response = await axios.post("https://api-msib-6-portal-berita-01.educalab.id/Register", {
+        const response = await axios.post("http://localhost:5000/Register", {
           username: this.username,
           email: this.email,
           password: this.password,
@@ -146,58 +141,51 @@ export default {
       this.$router.push({ name: "Login" });
     },
     loginWithGoogle() {
-      window.location.href = "http://localhost:5000/auth/google/callback";
+      window.location.href = "http://localhost:5000/auth/google";
     },
   },
 };
 </script>
 
 <style scoped>
-.content-wrapper {
+.register-container {
   display: flex;
-  flex-direction: column;
-  max-width: 500px; /* Limit width for larger screens */
-  margin: auto; /* Center align content */
-  padding: 20px; /* Add padding around content */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url(../assets/AuthBlueBg.svg); /* Blue background, not too dark */
 }
 
-.google-logo {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-
-.font-size-small {
-  font-size: 0.8rem;
-}
-
-.alert {
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
+.register-card {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .form-control {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 5px;
 }
 
-.form-group {
-  margin-bottom: 1rem;
+.alert {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.form-check-input {
+  margin-right: 5px;
+}
+
+.google-logo {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 
 .btn {
@@ -207,15 +195,11 @@ export default {
   font-size: 1rem;
 }
 
-@media (max-width: 767px) {
-  .form-control,
-  .btn {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
+.text-danger {
+  cursor: pointer;
+}
 
-  .btn {
-    padding: 8px 40%;
-  }
+.font-size-small {
+  font-size: 0.8rem;
 }
 </style>

@@ -22,9 +22,6 @@
         <div class="news-feed mt-5">
           <div class="news-feed-title d-flex justify-content-between">
             <h5 class="title">News Feed</h5>
-            <!-- <button variant="primary" class="detail-button" @click="toNews">
-              See More
-            </button> -->
           </div>
           <div class="news-feeds-list mt-4">
             <div class="card-news-feed hover-pointer" v-for="news in latestNews" :key="news.id"
@@ -39,27 +36,27 @@
       </div>
     </div>
 
-    <div class="category-news mt-5">
-      <div class="category-content" v-for="category in newsByCategory" :key="category.id">
-        <div class="title-content d-flex justify-content-between mt-5">
-          <h5 class="title">{{ category.categories_name }}</h5>
-          <i class="bi bi-arrow-right-circle-fill"></i>
-        </div>
-        <hr class="divider">
-        <div class="news d-flex" v-for="news in category.news" :key="news.id">
-          <img :src="news.image_url" class="image-news-feed" alt="ImageNews">
-          <div class="news-title">
-            <h2>{{ news.title }}</h2>
-            <h6 class="news-time text-secondary">{{ formatDate(news.createdAt) }}</h6>
+    <div class="category-content" v-for="category in newsByCategory" :key="category.id">
+  <div class="title-content d-flex justify-content-between mt-5">
+    <h5 class="title">{{ category.categories_name }}</h5>
+    <i class="bi bi-arrow-right-circle-fill" @click="handleCategoryClick(category.categories_id)"></i>
+  </div>
+  <hr class="divider">
+  <div class="news d-flex" v-for="news in category.news" :key="news.id" >
+    <img :src="news.image_url" class="image-news-feed" alt="ImageNews">
+    <div class="news-title hover-pointer">
+      <h2 @click="handleNewsClick(news.news_id)">{{ news.title }}</h2>
+      <!-- <span @click="handleNewsClick(news.news_id)" style="cursor: pointer;">&raquo;</span> -->
+      <h6 class="news-time text-secondary">{{ formatDate(news.createdAt) }}</h6>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 import axios from "../../services/axios";
+import moment from "moment";
 
 export default {
   name: "LandingPage",
@@ -68,16 +65,30 @@ export default {
       latestHeadline: {},
       latestNews: [],
       categories: [],
-      newsList: [],
-      filterNews: [],
-      newsByCategory: [], // New variable to store categorized news
+      newsByCategory: [],
+      isLoggedIn: false, // Assuming you have a mechanism to check user login status
     };
   },
   methods: {
-    async fetchNews() {
+     async fetchNews() {
       try {
         const response = await axios.get("/news");
         this.newsList = response.data;
+        // Urutkan berita berdasarkan createdAt dari yang terbaru ke terlama
+        this.newsList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        // Filter berita yang harus ditampilkan sesuai statusnya
+        this.latestHeadline = this.newsList.find(news => news.status === 'published');
+        this.latestNews = this.newsList.filter(news => news.status === 'published').slice(1, 13);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    },
+    async fetchNewsUser() { //get news user yang blm login jadi dilandingpage bisa menampilan news bagi user yang blm login
+      try {
+        const response = await axios.get("/news/user");
+        this.newsList = response.data;
+        // Urutkan berita berdasarkan createdAt dari yang terbaru ke terlama
+        this.newsList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         this.latestHeadline = this.newsList[0];
         this.latestNews = this.newsList.slice(1, 13);
       } catch (error) {
@@ -94,18 +105,23 @@ export default {
       }
     },
     async fetchNewsByCategory() {
-      try {
-        const categoryPromises = this.categories.map(async (category) => {
-          const response = await axios.get(`/news?category=${category.id}`);
-          // category.news = response.data.slice(0, 1);
-          return { ...category, news: response.data.filter(news => news.categories_id === category.categories_id).slice(0, 1) }; // Returning the full category with news
-        });
-        this.newsByCategory = await Promise.all(categoryPromises);
-        console.log(this.newsByCategory)// Storing categorized news in the new variable
-      } catch (error) {
-        console.error("Error fetching news by category:", error);
-      }
-    },
+  try {
+    const categoryPromises = this.categories.map(async (category) => {
+      const response = await axios.get(`/news?category=${category.categories_id}`);
+      // return { ...category, news: response.data.filter(news => news.categories_id === category.categories_id).slice(0, 1) }; // Returning the full category with news
+      let news = response.data.filter(news => news.categories_id === category.categories_id && news.status==="published");
+        news.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Mengurutkan berita berdasarkan tanggal
+        return { ...category, news: news.slice(0, 1) }; 
+    });
+    this.newsByCategory = await Promise.all(categoryPromises);
+  } catch (error) {
+    console.error("Error fetching news by category:", error);
+  }
+},
+handleCategoryClick(categoryId) {
+    this.$router.push({ path: `/category/${categoryId}` });
+  },
+
     handleNewsClick(newsId) {
       this.$router.push({ path: `/news/${newsId}` });
     },
@@ -134,6 +150,18 @@ export default {
 
 
 <style>
+.news-title {
+  transition: transform 0.3s ease; /* Animasi perubahan transformasi selama 0.3 detik */
+}
+.news-title h2 {
+  font-size: 25px;
+}
+
+.news-title:hover {
+  transform: scale(1.05); /* Efek scaling saat dihover */
+  cursor: pointer; /* Ubah kursor saat dihover menjadi pointer */
+  color: #085487;
+}
 .card-news-feed {
   border: none;
   flex: 0 0 calc(25% - 10px);
@@ -215,10 +243,19 @@ export default {
 
 .title-caption {
   font-size: 36px;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.829); 
   line-height: 45px;
   padding-bottom: 10px;
+  overflow: hidden; /* Menyembunyikan teks yang keluar dari batas elemen */
+  width: 100%; /* Memastikan elemen mengambil seluruh lebar */
+  animation: pulse 5s infinite;
 }
 
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
 .sub-caption {
   color: #AB533C;
   margin-right: 20px;

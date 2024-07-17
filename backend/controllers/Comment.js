@@ -25,6 +25,7 @@ export const addComment = async (req, res) => {
       comment_text,
       user_id,
       news_id,
+      createdAt: new Date() // Timestamp saat komentar dibuat
     });
 
     // Kirim respons berhasil
@@ -35,6 +36,7 @@ export const addComment = async (req, res) => {
         user_id: comment.user_id,
         news_id: comment.news_id,
         comment_text: comment.comment_text,
+        createdAt: comment.createdAt
       },
     });
   } catch (error) {
@@ -102,53 +104,40 @@ export const deleteComment = async (req, res) => {
 export const viewComments = async (req, res) => {
   try {
     const response = await Comments.findAll({
-      attributes: ["comment_id", "comment_text", "user_id", "news_id"],
+      attributes: ['comment_id', 'comment_text', 'user_id', 'news_id'], 
       include: [
         {
           model: Users,
-          attributes: ["username"],
-        },
+          attributes: ['username'],
+          as: 'user' // Menetapkan alias 'user' untuk model Users
+        }
       ],
     });
-
-    const formattedResponse = response.map((comment) => ({
-      comment_id: comment.comment_id,
-      comment_text: comment.comment_text,
-      username: comment.User.username,
-      news_id: comment.news_id,
-    }));
-
-    res.status(200).json(formattedResponse);
+    res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
 
+
 // Fungsi untuk mencari komentar berdasarkan news_id
 export const viewcommentId = async (req, res) => {
   try {
-    const { news_id } = req.params;
-    const comments = await Comments.findAll({
-      where: { news_id: news_id },
-      attributes: ["comment_id", "comment_text", "user_id", "news_id"],
-      include: [
-        {
-          model: Users,
-          attributes: ["username"],
-        },
-      ],
-    });
-
-    const formattedComments = comments.map((comment) => ({
-      comment_id: comment.comment_id,
-      comment_text: comment.comment_text,
-      username: comment.User.username,
-      news_id: comment.news_id,
-    }));
-
-    res.status(200).json(formattedComments);
+      const { news_id } = req.params;
+      const comments = await Comments.findAll({
+          where: { news_id: news_id },
+          attributes: ['comment_id', 'comment_text', 'user_id', 'news_id'], // Atribut yang benar
+          include: [
+            {
+              model: Users,
+              attributes: ['username'], // Ambil hanya username dari Users
+              as: 'user' // Menetapkan alias 'user' untuk model Users
+            }
+          ],
+        });
+      res.status(200).json(comments);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+      res.status(500).json({ msg: error.message });
   }
 };
 

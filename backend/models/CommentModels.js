@@ -1,11 +1,12 @@
-import { Sequelize } from "sequelize";
-import db from "../config/database.js";
-import Users from "./UserModels.js";
-import News from "./NewsModels.js";
+import { Sequelize, literal } from 'sequelize';
+import db from '../config/database.js';
+import Users from './UserModels.js';
+import News from './NewsModels.js';
+
 const { DataTypes } = Sequelize;
 
 const Comments = db.define(
-  "comments",
+  'comments',
   {
     comment_id: {
       type: DataTypes.INTEGER,
@@ -16,14 +17,20 @@ const Comments = db.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: literal('CURRENT_TIMESTAMP'),
+      allowNull: false,
+    },
   },
   {
     freezeTableName: true,
   }
 );
 
-Users.hasMany(Comments, { foreignKey: "user_id" });
-Comments.belongsTo(Users, { foreignKey: "user_id" });
+Users.hasMany(Comments, { foreignKey: 'user_id' });
+Comments.belongsTo(Users, { foreignKey: 'user_id' });
 
-News.hasMany(Comments, { foreignKey: "news_id" });
+News.hasMany(Comments, { foreignKey: 'news_id' });
+
 export default Comments;
